@@ -7,7 +7,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 # Get the client (bot) object from discord
-client = commands.Bot(command_prefix = "!", intents = intents)
+client = commands.Bot(command_prefix = "sb! ", intents = intents)
 
 # Add event listeners
 @client.event
