@@ -1,6 +1,13 @@
-import discord 
+import discord
+import schedule
+import time
+
+from discord import user
 from discord.ext import commands
 from enum import Enum
+
+from discord.ext.commands import bot
+
 
 class Weekday(Enum):
     MONDAY = 1
@@ -84,6 +91,16 @@ async def weekday_time(weekday, channel):
     # TODO: how are we going to do this start time/end time selection? Do we wait like 30 sec
     # for them to finalize their decision?? OR they select a time and we ask them to confirm?
 
+#Removes role if atSchoolChecker takes place.
+@bot.command(pass_context=True)
+@commands.has_role("At School")
+async def member_role_update(member):
+    role = discord.utils.get(member.server.roles, name="At School")
+    await bot.remove_roles(user, role)
+
+#Triggers checking if the user is at school every n minutes.
+def atSchoolChecker():
+    schedule.every(30).minutes.do(job)
 
 # Execute the bot with the specified token
 client.run(TOKEN)
