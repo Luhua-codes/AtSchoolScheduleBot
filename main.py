@@ -34,11 +34,12 @@ async def ping(ctx):
 
 
 @client.command()
-async def dm(ctx):
+async def setup(ctx):
     print(ctx.author)
     message="What days are you usually at school?"
     description="Select by clicking the emotes of the weekdays"
     embed = discord.Embed(title=message, description=description)
+    await ctx.channel.send("Message sent! Check your DMs.")
     await ctx.author.send(embed=embed)
 
 # Execute the bot with the specified token
