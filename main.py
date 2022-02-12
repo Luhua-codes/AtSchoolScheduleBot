@@ -52,6 +52,7 @@ async def setup(ctx):
     dm = await ctx.author.send(embed=embed)
 
     # Add the reaction emotes for the weekdays on the embed
+    #yooo
     emojis = ['👍']
     for emoji in emojis:
         await dm.add_reaction(emoji)
