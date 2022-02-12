@@ -18,6 +18,7 @@ async def on_ready():
         guild_count += 1
     print("my first bot is in " + str(guild_count) + " guilds")
 
+# Just testing stuff :)
 @client.event
 async def on_message(message):
     if message.author == client.user:
@@ -26,13 +27,11 @@ async def on_message(message):
         await message.channel.send('Hello!')
     await client.process_commands(message)
 
-# DM the user 
-
 @client.command(name="ping")
 async def ping(ctx):
 	await ctx.channel.send("pong")
 
-
+# DM the user 
 @client.command()
 async def setup(ctx):
     print(ctx.author)
@@ -40,7 +39,27 @@ async def setup(ctx):
     description="Select by clicking the emotes of the weekdays"
     embed = discord.Embed(title=message, description=description)
     await ctx.channel.send("Message sent! Check your DMs.")
-    await ctx.author.send(embed=embed)
+    dm = await ctx.author.send(embed=embed)
+
+    # Add the reaction emotes for the weekdays on the embed
+    emojis = ['👍']
+    for emoji in emojis:
+        await dm.add_reaction(emoji)
+
+# Even listener for when a user clicks on a weekday emote to make their selection
+@client.event
+async def on_reaction_add(reaction, user):
+    if user.bot:
+        return
+    if str(reaction.emoji) == '👍':
+        print("got thumbs up")
+    # elif emoji == "emoji 2":
+    #     pass
+    # elif emoji == "emoji 3":
+    #     pass
+    # else:
+    #     return
+
 
 # Execute the bot with the specified token
 client.run(TOKEN)
