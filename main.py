@@ -63,9 +63,7 @@ async def on_reaction_add(reaction, user):
         return
     if str(reaction.emoji) == '👍':
         print("got thumbs up")
-        # Call a function to print the message for asking them what time they will be at school
-        await weekday_time(Weekday.MONDAY)
-
+        await weekday_time(Weekday.MONDAY, reaction.message.channel)
     # elif emoji == "emoji 2":
     #     pass
     # elif emoji == "emoji 3":
@@ -73,11 +71,18 @@ async def on_reaction_add(reaction, user):
     # else:
     #     return
 
-async def weekday_time(weekday):
+ # Helper function to ask a user what time they will be at school
+async def weekday_time(weekday, channel):
     message = "What time are you at school on " + weekday.name.lower().capitalize() + "?"
     description="Select the start time and end time by clicking the emotes"
-    print(message)
-    print(description)
+    # print(message)
+    # print(description)
+    # print(channel)
+    embed = discord.Embed(title=message, description=description)
+    await channel.send(embed=embed)
+    
+    # TODO: how are we going to do this start time/end time selection? Do we wait like 30 sec
+    # for them to finalize their decision?? OR they select a time and we ask them to confirm?
 
 
 # Execute the bot with the specified token
