@@ -13,6 +13,8 @@ class Weekday(Enum):
 
 TOKEN = open("discord-token.txt","r").readline()
 
+print("Hello World")
+
 intents = discord.Intents.default()
 intents.members = True
 
