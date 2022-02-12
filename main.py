@@ -1,6 +1,7 @@
 import discord 
 from discord.ext import commands
 from enum import Enum
+import re
 
 class Weekday(Enum):
     MONDAY = 1
@@ -8,8 +9,6 @@ class Weekday(Enum):
     WEDNESDAY = 3
     THURSDAY = 4
     FRIDAY = 5
-    SATURDAY = 6
-    SUNDAY = 7
 
 TOKEN = open("discord-token.txt","r").readline()
 
@@ -46,45 +45,75 @@ async def ping(ctx):
 async def setup(ctx):
     print(ctx.author)
     message="What days are you usually at school?"
-    description="Select by clicking the emotes of the weekdays"
+    description="Select by clicking the emotes of the weekdays. Click the check mark when you are done."
     embed = discord.Embed(title=message, description=description)
     await ctx.channel.send("Message sent! Check your DMs.")
     dm = await ctx.author.send(embed=embed)
 
     # Add the reaction emotes for the weekdays on the embed
-    #yooo
-    emojis = ['👍']
+    emojis = ['👍', '✅']
     for emoji in emojis:
         await dm.add_reaction(emoji)
 
 # Even listener for when a user clicks on a weekday emote to make their selection
+selected_weekdays = []
 @client.event
 async def on_reaction_add(reaction, user):
     if user.bot:
         return
     if str(reaction.emoji) == '👍':
-        print("got thumbs up")
-        await weekday_time(Weekday.MONDAY, reaction.message.channel)
-    # elif emoji == "emoji 2":
-    #     pass
+        print("added thumbs up")
+        selected_weekdays.append(Weekday.MONDAY.name)
+        print(selected_weekdays)
+    elif str(reaction.emoji) == '✅':
+        await weekday_time(selected_weekdays, reaction.message.channel)
     # elif emoji == "emoji 3":
     #     pass
     # else:
     #     return
 
- # Helper function to ask a user what time they will be at school
-async def weekday_time(weekday, channel):
-    message = "What time are you at school on " + weekday.name.lower().capitalize() + "?"
-    description="Select the start time and end time by clicking the emotes"
-    # print(message)
-    # print(description)
-    # print(channel)
-    embed = discord.Embed(title=message, description=description)
-    await channel.send(embed=embed)
-    
-    # TODO: how are we going to do this start time/end time selection? Do we wait like 30 sec
-    # for them to finalize their decision?? OR they select a time and we ask them to confirm?
+@client.event
+async def on_reaction_remove(reaction, user):
+    if user.bot:
+        return
+    if str(reaction.emoji) == '👍':
+        print("removed thumbs up")
+        selected_weekdays.remove(Weekday.MONDAY.name)
+        print(selected_weekdays)
+    elif emoji == '✅':
+        await weekday_time(selected_weekdays, reaction.message.channel)
 
+
+ # Helper function to ask a user what time they will be at school
+async def weekday_time(weekdays, channel):
+    for weekday in weekdays:
+        on_campus_message = "What time are you at school on " + weekday.lower().capitalize() + "?"
+        on_campus_description="Enter the time you arrive and leave (example format: 0900 1600)"
+        on_campus_embed = discord.Embed(title=on_campus_message, description=on_campus_description)
+        await channel.send(embed=on_campus_embed)
+
+        def check_on_campus_time(msg):
+            # TODO: validate format
+            return True
+
+        user_on_campus_times = await client.wait_for("message", check=check_on_campus_time)
+        print(user_on_campus_times.content)
+        on_campus_times = user_on_campus_times.content.split(" ")
+        print(on_campus_times)
+
+        available_message = "What times are you available on " + weekday.lower().capitalize() + "?"
+        available_description="Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
+        available_embed = discord.Embed(title=available_message, description=available_description)
+        await channel.send(embed=available_embed)  
+
+        def check_available_time(msg):
+            # TODO: validate format
+            return True
+        user_available_times = await client.wait_for("message", check=check_available_time)
+        print(user_available_times.content)
+
+        available_times = re.split(' |, ', user_available_times.content)
+        print(available_times)
 
 # Execute the bot with the specified token
 client.run(TOKEN)
