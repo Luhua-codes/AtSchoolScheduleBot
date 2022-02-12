@@ -1,5 +1,15 @@
 import discord 
 from discord.ext import commands
+from enum import Enum
+
+class Weekday(Enum):
+    MONDAY = 1
+    TUESDAY = 2
+    WEDNESDAY = 3
+    THURSDAY = 4
+    FRIDAY = 5
+    SATURDAY = 6
+    SUNDAY = 7
 
 TOKEN = open("discord-token.txt","r").readline()
 
@@ -53,12 +63,21 @@ async def on_reaction_add(reaction, user):
         return
     if str(reaction.emoji) == '👍':
         print("got thumbs up")
+        # Call a function to print the message for asking them what time they will be at school
+        await weekday_time(Weekday.MONDAY)
+
     # elif emoji == "emoji 2":
     #     pass
     # elif emoji == "emoji 3":
     #     pass
     # else:
     #     return
+
+async def weekday_time(weekday):
+    message = "What time are you at school on " + weekday.name.lower().capitalize() + "?"
+    description="Select the start time and end time by clicking the emotes"
+    print(message)
+    print(description)
 
 
 # Execute the bot with the specified token
