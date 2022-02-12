@@ -1,4 +1,5 @@
 import discord 
+from discord.ext import commands
 
 TOKEN = open("discord-token.txt","r").readline()
 
@@ -6,7 +7,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 # Get the client (bot) object from discord
-client = discord.Client(intents = intents)
+client = commands.Bot(command_prefix = "!", intents = intents)
 
 # Add event listeners
 @client.event
@@ -23,16 +24,22 @@ async def on_message(message):
         return
     if message.content.startswith('.hello'):
         await message.channel.send('Hello!')
+    await client.process_commands(message)
 
-@client.event
-async def on_member_join(member):
-    print('got a thing')
-    channel = client.get_channel('941881622465232979')
-    await channel.send('Welcome to this channel!')
+# DM the user 
 
-@client.event
-async def on_member_remove(member):
-    print('lost a thing')
+@client.command(name="ping")
+async def ping(ctx):
+	await ctx.channel.send("pong")
+
+
+@client.command()
+async def dm(ctx):
+    print(ctx.author)
+    message="What days are you usually at school?"
+    description="Select by clicking the emotes of the weekdays"
+    embed = discord.Embed(title=message, description=description)
+    await ctx.author.send(embed=embed)
 
 # Execute the bot with the specified token
 client.run(TOKEN)
