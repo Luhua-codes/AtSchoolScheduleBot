@@ -1,6 +1,7 @@
 import discord 
 from discord.ext import commands
 from enum import Enum
+import re
 
 class Weekday(Enum):
     MONDAY = 1
@@ -97,6 +98,8 @@ async def weekday_time(weekdays, channel):
 
         user_on_campus_times = await client.wait_for("message", check=check_on_campus_time)
         print(user_on_campus_times.content)
+        on_campus_times = user_on_campus_times.content.split(" ")
+        print(on_campus_times)
 
         available_message = "What times are you available on " + weekday.lower().capitalize() + "?"
         available_description="Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
@@ -108,6 +111,9 @@ async def weekday_time(weekdays, channel):
             return True
         user_available_times = await client.wait_for("message", check=check_available_time)
         print(user_available_times.content)
+
+        available_times = re.split(' |, ', user_available_times.content)
+        print(available_times)
 
 # Execute the bot with the specified token
 client.run(TOKEN)
