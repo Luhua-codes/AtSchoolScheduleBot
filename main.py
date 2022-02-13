@@ -61,7 +61,7 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-    if message.content.startswith('.hello'):
+    if message.content.startswith('hello'):
         await message.channel.send('Hello!')
     await client.process_commands(message)
 
@@ -74,12 +74,18 @@ async def ping(ctx):
 # DM the user
 @client.command()
 async def setup(ctx):
-    print(ctx.author.id, ctx.author)
 
     # insert duid into database
-    insert_stmt = sqlalchemy.text("INSERT INTO user (discord_user_id) VALUES(:duid)", )
+    insert_to_user = sqlalchemy.text("INSERT INTO user (discord_user_id) VALUES(:duid)", )
     with pool.connect() as db_conn:
-        db_conn.execute(insert_stmt, duid=ctx.author.id)
+        db_conn.execute(insert_to_user, duid=ctx.author.id)
+    print(ctx.author.id, ctx.author)
+
+    insert_to_user_servers = sqlalchemy.text("INSERT INTO user_servers (discord_user_id, discord_server_id) VALUES("
+                                             ":duid, :dsid)",)
+    with pool.connect() as db_conn:
+        db_conn.execute(insert_to_user_servers, duid=ctx.author, dsid=ctx.guild.id)
+    print(ctx.author, ctx.guild.id, ctx.guild.name)
 
     message = "What days are you usually at school?"
     description = "Select by clicking the emotes of the weekdays. Click the check mark when you are done."
