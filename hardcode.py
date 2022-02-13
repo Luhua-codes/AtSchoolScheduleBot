@@ -69,6 +69,30 @@ async def on_reaction_add(reaction, user):
     if str(reaction.emoji) == '🇲':
         users[user.id].monday = True
         print(user.id, "selected Monday")
+    elif str(reaction.emoji) == '🇹':
+        users[user.id].tuesday = True
+        print(user.id, "selected Tuesday")
+    elif str(reaction.emoji) == '🇼':
+        users[user.id].wednesday = True
+        print(user.id, "selected Wednesday")
+    elif str(reaction.emoji) == '🇷':
+        users[user.id].thursday = True
+        print(user.id, "selected Thursday")
+    elif str(reaction.emoji) == '🇫':
+        users[user.id].friday = True
+        print(user.id, "selected Friday")
+
+    if str(reaction.emoji) == '✅':
+        await weekday_time(reaction.message.channel, user.id)
+
+@client.event
+async def on_reaction_remove(reaction, user):
+    pass
+
+@client.event
+async def weekday_time():
+    pass
+
 
 # Execute the bot with the specified token
 client.run(TOKEN)
