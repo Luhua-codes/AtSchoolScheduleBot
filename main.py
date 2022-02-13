@@ -189,14 +189,17 @@ async def on_reaction_remove(reaction, user):
 # Helper function to ask a user what time they will be at school and not in class
 async def weekday_time(channel, user_row):
     current_col = 7
+    current_col_old_value = 7
     for day in range(2, 7):
         if user_row.first()[day] > 0:
-            available_message = "What times are you available on " + Weekday(1).name + "?" # https://docs.python.org/3/library/enum.html
-            available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
+            available_message = "What times are you available on " + Weekday(
+                1).name + "?"  # https://docs.python.org/3/library/enum.html
+            available_description = "Enter up to 3 time slots in 24 hour time, separated by spaces (example format: 0900 1200, 1400 1600)"
             available_embed = discord.Embed(title=available_message, description=available_description)
 
             def check_available_time(msg):  # TODO: validate format
                 return True
+
             await channel.send(embed=available_embed)
 
             user_available_times = await client.wait_for("message", check=check_available_time)
@@ -211,36 +214,13 @@ async def weekday_time(channel, user_row):
             time = f"{t[:2]}:{t[2:]}:00"
             # modify = "UPDATE user SET user_row.first()[current_col] = $TIME {time} WHERE discord_user_id = %(duid)s"
             # modify = "UPDATE user SET user_row.first()[current_col] = t WHERE discord_user_id = %(duid)s"
-            modify = "UPDATE user SET user_row.first()[current_col] = CAST(time as TIME) WHERE discord_user_id = %(" \
-                     "duid)s "  # https://www.w3schools.com/sql/func_mysql_cast.asp
-            pool.connect().execute(modify, {'duid': user_row.first()[1]})
-            current_col += 1
-        if current_col - current_col_old_value != 5:
-            current_col = current_col_old_value + 5  # update to go to next set of availability columns
-
-
-# for weekday in weekdays:
-#     available_message = "What times are you available on " + weekday.lower().capitalize() + "?"
-#     available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
-#     available_embed = discord.Embed(title=available_message, description=available_description)
-#     await channel.send(embed=available_embed)
-#
-#     def check_available_time(msg):
-#         # TODO: validate format
-#         return True
-#
-#     user_available_times = await client.wait_for("message", check=check_available_time)
-#     print(user_available_times.content)
-#
-#     available_times = re.split(' |, ', user_available_times.content)
-#     print(available_times)
-#
-#     # convert to timestamp format HH:MM:SS before storing in db
-#     timestamps = []
-#     for time in available_times:
-#         hours = time[:2]
-#         mins = time[2:]
-#         timestamps.append(f"{hours}:{mins}:00")
+            # modify = "UPDATE user SET user_row.first()[current_col] = CAST(time as TIME) WHERE discord_user_id = %(" \
+            "duid)s"  # https://www.w3schools.com/sql/func_mysql_cast.asp
+        modify = "UPDATE user SET mon_start_time_1 = <00:00:00> WHERE discord_user_id = 723616993395343461"
+        pool.connect().execute(modify, {'duid': user_row.first()[1]})
+        current_col += 1
+    if current_col - current_col_old_value != 5:
+        current_col = current_col_old_value + 5  # update to go to next set of availability columns
 
 
 # Execute the bot with the specified token
