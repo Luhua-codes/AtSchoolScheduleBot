@@ -54,8 +54,8 @@ try:
         create_user_server_table_query = """
         CREATE TABLE user_servers(
             id INT AUTO_INCREMENT PRIMARY KEY,
-            discord_user_id INT,
-            discord_server_id INT
+            discord_user_id BIGINT,
+            discord_server_id BIGINT
         )
         """
         with connection.cursor() as cursor:
