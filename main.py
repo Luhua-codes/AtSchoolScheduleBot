@@ -112,31 +112,31 @@ async def on_reaction_add(reaction, user):
         query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
         modify = "UPDATE user SET monday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "selected Monday")
+            print(user.id, "selected Monday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.MONDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇹':
         modify = "UPDATE user SET tuesday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "selected Tuesday")
+            print(user.id, "selected Tuesday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.TUESDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇼':
         modify = "UPDATE user SET wednesday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "selected Wednesday")
+            print(user.id, "selected Wednesday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.WEDNESDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇷':
         modify = "UPDATE user SET thursday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "selected Thursday")
+            print(user.id, "selected Thursday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.THURSDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇫':
         modify = "UPDATE user SET friday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "selected Friday")
+            print(user.id, "selected Friday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.FRIDAY.name.lower(), user.id)
     if str(reaction.emoji) == '✅':
@@ -155,27 +155,27 @@ async def on_reaction_remove(reaction, user):
         query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
         modify = "UPDATE user SET monday = false WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "unselected Monday")
+            print(user.id, "unselected Monday")
             db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == '🇹':
         modify = "UPDATE user SET tuesday = false WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "unselected Tuesday")
+            print(user.id, "unselected Tuesday")
             db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == '🇼':
         modify = "UPDATE user SET wednesday = false WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "unselected Wednesday")
+            print(user.id, "unselected Wednesday")
             db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == '🇷':
         modify = "UPDATE user SET thursday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "unselected Thursday")
+            print(user.id, "unselected Thursday")
             db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == '🇫':
         modify = "UPDATE user SET friday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id + "unselected Friday")
+            print(user.id, "unselected Friday")
             db_conn.execute(modify, {'duid': user.id})
 
 
@@ -191,7 +191,7 @@ async def weekday_time(channel, user_row):
     current_col = 7
     for day in range(2, 7):
         if user_row.first()[day] > 0:
-            available_message = "What times are you available on " + Weekday(1).name + "?"
+            available_message = "What times are you available on " + Weekday(1).name + "?" # https://docs.python.org/3/library/enum.html
             available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
             available_embed = discord.Embed(title=available_message, description=available_description)
             await channel.send(embed=available_embed)
