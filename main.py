@@ -108,6 +108,9 @@ async def on_reaction_add(reaction, user):
     if user.bot:
         return
     if str(reaction.emoji) == '🇲':
+        print("added thumbs up")
+        # selected_weekdays.append(Weekday.MONDAY.name)
+        query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
         modify = "UPDATE user SET monday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id)
@@ -138,7 +141,11 @@ async def on_reaction_add(reaction, user):
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.FRIDAY.name.lower(), user.id)
     if str(reaction.emoji) == '✅':
-        await weekday_time(reaction.message.channel)
+        query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            user_row = db_conn.execute(query, {'duid': user.id})
+
+        await weekday_time(reaction.message.channel, user_row)
 
 
 @client.event
@@ -158,6 +165,7 @@ async def on_reaction_remove(reaction, user):
     elif str(reaction.emoji) == '🇫':
         pass
 
+
 # reusable helper function if sql can use variable for column name
 # async def update_weekday_column(weekday, duid):
 #     # modify = sqlalchemy.text("UPDATE user SET :weekday=true WHERE discord_user_id=:duid")
@@ -166,30 +174,58 @@ async def on_reaction_remove(reaction, user):
 #         # await db_conn.execute(modify, weekday="monday", duid=duid) # update day boolean
 
 # Helper function to ask a user what time they will be at school and not in class
-async def weekday_time(channel):
-    # QUERY WEEKDAYS HERE
-    for weekday in weekdays:
-        available_message = "What times are you available on " + weekday.lower().capitalize() + "?"
-        available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
-        available_embed = discord.Embed(title=available_message, description=available_description)
-        await channel.send(embed=available_embed)
+async def weekday_time(channel, user_row):
+    current_col = 7
+    for day in range(2, 7):
+        if user_row.first()[day] > 0:
+            available_message = "What times are you available on " + day.lower().capitalize() + "?"
+            available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
+            available_embed = discord.Embed(title=available_message, description=available_description)
+            await channel.send(embed=available_embed)
 
-        def check_available_time(msg):
-            # TODO: validate format
-            return True
+            user_available_times = await client.wait_for("message", check=check_available_time)
+            print(user_available_times.content)
 
-        user_available_times = await client.wait_for("message", check=check_available_time)
-        print(user_available_times.content)
+            def check_available_time(msg):  # TODO: validate format
+                return True
+        else:
+            continue
 
-        available_times = re.split(' |, ', user_available_times.content)
-        print(available_times)
+        user_available_times = user_available_times.split()
+        current_col_old_value = current_col
+        for t in user_available_times:
+            # time = f"{t[:2]}:{t[2:]}:00"
+            # modify = "UPDATE user SET user_row.first()[current_col] = $TIME {time} WHERE discord_user_id = %(duid)s"
+            modify = "UPDATE user SET user_row.first()[current_col] = t WHERE discord_user_id = %(duid)s"
+            with pool.connect() as db_conn:
+                db_conn.execute(modify, {'duid': user_row.first()[1]})
+            current_col += 1
+        if current_col - current_col_old_value != 5:
+            current_col = current_col_old_value + 5  # update to go to next set of availability columns
 
-        # convert to timestamp format HH:MM:SS before storing in db 
-        timestamps = []
-        for time in available_times:
-            hours = time[:2]
-            mins = time[2:]
-            timestamps.append(f"{hours}:{mins}:00")
+
+# for weekday in weekdays:
+#     available_message = "What times are you available on " + weekday.lower().capitalize() + "?"
+#     available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
+#     available_embed = discord.Embed(title=available_message, description=available_description)
+#     await channel.send(embed=available_embed)
+#
+#     def check_available_time(msg):
+#         # TODO: validate format
+#         return True
+#
+#     user_available_times = await client.wait_for("message", check=check_available_time)
+#     print(user_available_times.content)
+#
+#     available_times = re.split(' |, ', user_available_times.content)
+#     print(available_times)
+#
+#     # convert to timestamp format HH:MM:SS before storing in db
+#     timestamps = []
+#     for time in available_times:
+#         hours = time[:2]
+#         mins = time[2:]
+#         timestamps.append(f"{hours}:{mins}:00")
 
 
 # Execute the bot with the specified token
