@@ -108,18 +108,7 @@ async def on_reaction_add(reaction, user):
     if user.bot:
         return
     if str(reaction.emoji) == '🇲':
-        print("added thumbs up")
-        # selected_weekdays.append(Weekday.MONDAY.name)
-        query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
-        modify = "UPDATE user SET monday = true WHERE discord_user_id = %(duid)s"
-        with pool.connect() as db_conn:
-            print(user.id)
-            db_conn.execute(modify, {'duid': user.id}) # update day boolean
-            user_row = db_conn.execute(query, {'duid': user.id}) # to check row status
-            print(user_row)
-            print(user_row.first()[2])
-
-        # print(selected_weekdays)
+        update_weekday_column(Weekday.MONDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇹':
         pass
     elif str(reaction.emoji) == '🇼':
@@ -149,6 +138,11 @@ async def on_reaction_remove(reaction, user):
     elif str(reaction.emoji) == '🇫':
         pass
 
+
+async def update_weekday_column(weekday, duid):
+    modify = "UPDATE user SET %(weekday)s = true WHERE discord_user_id = %(duid)s"
+    with pool.connect() as db_conn:
+        db_conn.execute(modify, {'weekday': weekday,'duid': duid}) # update day boolean
 
 # Helper function to ask a user what time they will be at school and not in class
 async def weekday_time(channel):
