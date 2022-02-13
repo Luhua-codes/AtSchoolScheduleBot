@@ -3,7 +3,7 @@ import discord
 # from discord import emoji
 from discord.ext import commands
 from enum import Enum
-import re
+# import re
 from google.cloud.sql.connector import connector
 import sqlalchemy
 from sqlalchemy.dialects.mysql import pymysql
@@ -194,13 +194,13 @@ async def weekday_time(channel, user_row):
             available_message = "What times are you available on " + Weekday(1).name + "?" # https://docs.python.org/3/library/enum.html
             available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
             available_embed = discord.Embed(title=available_message, description=available_description)
+
+            def check_available_time(msg):  # TODO: validate format
+                return True
             await channel.send(embed=available_embed)
 
             user_available_times = await client.wait_for("message", check=check_available_time)
             print(user_available_times.content)
-
-            def check_available_time(msg):  # TODO: validate format
-                return True
         else:
             continue
 
