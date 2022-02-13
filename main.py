@@ -10,8 +10,6 @@ from sqlalchemy.dialects.mysql import pymysql
 from dotenv import load_dotenv
 import pymysql
 
-from db import cursor
-
 load_dotenv()
 
 
