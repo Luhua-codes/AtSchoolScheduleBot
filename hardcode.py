@@ -18,6 +18,36 @@ class User:
     wednesday = False
     thursday = False
     friday = False
+    ms1 = None
+    ms2 = None
+    ms3 = None
+    me1 = None
+    me2 = None
+    me3 = None
+    ts1 = None
+    ts2 = None
+    ts3 = None
+    te1 = None
+    te2 = None
+    te3 = None
+    ws1 = None
+    ws2 = None
+    ws3 = None
+    we1 = None
+    we2 = None
+    we3 = None
+    rs1 = None
+    rs2 = None
+    rs3 = None
+    re1 = None
+    re2 = None
+    re3 = None
+    fs1 = None
+    fs2 = None
+    fs3 = None
+    fe1 = None
+    fe2 = None
+    fe3 = None
 
 
 TOKEN = open("token.txt", "r").readline()
@@ -53,11 +83,11 @@ async def setup(ctx):  # use context
     dm = await ctx.author.send(embed=embed)
 
     # add reaction emotes for weekdays on embed
-    emojis = ['🇲', '🇹', '🇼', '🇷', '🇫', '✅']  # TODO: update with custom emotes
+    emojis = ["<:mon:942345965338243072>", "<:tue:942345965388566538>", "<:wed:942345965342457856>", "<:thu:942345965342429244>", "<:fri:942345965266944020>", '✅']  # TODO: update with custom emotes
     for e in emojis:
         await dm.add_reaction(e)
 
-    print(users)
+    print(users.keys())
 
 
 # event listener for user weekday reactions
@@ -66,24 +96,25 @@ async def on_reaction_add(reaction, user):
     if user.bot:
         return
 
-    if str(reaction.emoji) == '🇲':
+    if str(reaction.emoji) == "<:mon:942345965338243072>":
         users[user.id].monday = True
         print(user.id, "selected Monday")
-    elif str(reaction.emoji) == '🇹':
+    elif str(reaction.emoji) == "<:tue:942345965388566538>":
         users[user.id].tuesday = True
         print(user.id, "selected Tuesday")
-    elif str(reaction.emoji) == '🇼':
+    elif str(reaction.emoji) == "<:wed:942345965342457856>":
         users[user.id].wednesday = True
         print(user.id, "selected Wednesday")
-    elif str(reaction.emoji) == '🇷':
+    elif str(reaction.emoji) == "<:thu:942345965342429244>":
         users[user.id].thursday = True
         print(user.id, "selected Thursday")
-    elif str(reaction.emoji) == '🇫':
+    elif str(reaction.emoji) == "<:fri:942345965266944020>":
         users[user.id].friday = True
         print(user.id, "selected Friday")
 
     if str(reaction.emoji) == '✅':
-        await weekday_time(reaction.message.channel, user.id)
+        print("checkmark clicked")
+        await weekday_time(reaction.message.channel, user)
 
 
 @client.event
@@ -91,19 +122,19 @@ async def on_reaction_remove(reaction, user):
     if user.bot:
         return
 
-    if str(reaction.emoji) == '🇲':
+    if str(reaction.emoji) == "<:mon:942345965338243072>":
         users[user.id].monday = False
         print(user.id, "unselected Monday")
-    elif str(reaction.emoji) == '🇹':
+    elif str(reaction.emoji) == "<:tue:942345965388566538>":
         users[user.id].tuesday = False
         print(user.id, "unselected Tuesday")
-    elif str(reaction.emoji) == '🇼':
+    elif str(reaction.emoji) == "<:wed:942345965342457856>":
         users[user.id].wednesday = False
         print(user.id, "unselected Wednesday")
-    elif str(reaction.emoji) == '🇷':
+    elif str(reaction.emoji) == "<:thu:942345965342429244>":
         users[user.id].thursday = False
         print(user.id, "unselected Thursday")
-    elif str(reaction.emoji) == '🇫':
+    elif str(reaction.emoji) == "<:fri:942345965266944020>":
         users[user.id].friday = False
         print(user.id, "unselected Friday")
 

@@ -94,7 +94,7 @@ async def setup(ctx):
     dm = await ctx.author.send(embed=embed)
 
     # Add the reaction emotes for the weekdays on the embed
-    emojis = ['🇲', '🇹', '🇼', '🇷', '🇫', '✅'] #TODO: update with custom emotes
+    emojis = ['🇲', "<:tue:942345965388566538>", "<:wed:942345965342457856>", "<:thu:942345965342429244>", "<:fri:942345965266944020>", '✅']  # TODO: update with custom emotes
     for e in emojis:
         await dm.add_reaction(e)
 
@@ -104,7 +104,7 @@ async def setup(ctx):
 async def on_reaction_add(reaction, user):
     if user.bot:
         return
-    if str(reaction.emoji) == '🇲':
+    if str(reaction.emoji) == "<:mon:942345965338243072>":
         # selected_weekdays.append(Weekday.MONDAY.name)
         query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
         modify = "UPDATE user SET monday = true WHERE discord_user_id = %(duid)s"
@@ -112,25 +112,25 @@ async def on_reaction_add(reaction, user):
             print(user.id, "selected Monday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.MONDAY.name.lower(), user.id)
-    elif str(reaction.emoji) == '🇹':
+    elif str(reaction.emoji) == "<:tue:942345965388566538>":
         modify = "UPDATE user SET tuesday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "selected Tuesday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.TUESDAY.name.lower(), user.id)
-    elif str(reaction.emoji) == '🇼':
+    elif str(reaction.emoji) == "<:wed:942345965342457856>":
         modify = "UPDATE user SET wednesday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "selected Wednesday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.WEDNESDAY.name.lower(), user.id)
-    elif str(reaction.emoji) == '🇷':
+    elif str(reaction.emoji) == "<:thu:942345965342429244>":
         modify = "UPDATE user SET thursday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "selected Thursday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.THURSDAY.name.lower(), user.id)
-    elif str(reaction.emoji) == '🇫':
+    elif str(reaction.emoji) == "<:fri:942345965266944020>":
         modify = "UPDATE user SET friday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "selected Friday")
@@ -148,28 +148,28 @@ async def on_reaction_add(reaction, user):
 async def on_reaction_remove(reaction, user):
     if user.bot:
         return
-    if str(reaction.emoji) == '🇲':
+    if str(reaction.emoji) == "<:mon:942345965338243072>":
         query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
         modify = "UPDATE user SET monday = false WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "unselected Monday")
             db_conn.execute(modify, {'duid': user.id})
-    elif str(reaction.emoji) == '🇹':
+    elif str(reaction.emoji) == "<:tue:942345965388566538>":
         modify = "UPDATE user SET tuesday = false WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "unselected Tuesday")
             db_conn.execute(modify, {'duid': user.id})
-    elif str(reaction.emoji) == '🇼':
+    elif str(reaction.emoji) == "<:wed:942345965342457856>":
         modify = "UPDATE user SET wednesday = false WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "unselected Wednesday")
             db_conn.execute(modify, {'duid': user.id})
-    elif str(reaction.emoji) == '🇷':
+    elif str(reaction.emoji) == "<:thu:942345965342429244>":
         modify = "UPDATE user SET thursday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "unselected Thursday")
             db_conn.execute(modify, {'duid': user.id})
-    elif str(reaction.emoji) == '🇫':
+    elif str(reaction.emoji) == "<:fri:942345965266944020>":
         modify = "UPDATE user SET friday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "unselected Friday")
@@ -185,7 +185,7 @@ async def on_reaction_remove(reaction, user):
 
 # Helper function to ask a user what time they will be at school and not in class
 async def weekday_time(channel, user_row):
-    current_col = 7
+    current_col = 7  # start indexing from mon_start_time_1
     current_col_old_value = 7
     for day in range(2, 7):
         # if "SELECT * FROM user WHERE user_row.first()[day] == true":
@@ -214,7 +214,7 @@ async def weekday_time(channel, user_row):
                 # modify = "UPDATE user SET user_row.first()[current_col] = t WHERE discord_user_id = %(duid)s"
                 # modify = "UPDATE user SET user_row.first()[current_col] = CAST(time as TIME) WHERE discord_user_id = %(" \
                 "duid)s"  # https://www.w3schools.com/sql/func_mysql_cast.asp
-                #modify = "UPDATE user SET mon_start_time_1 = <00:00:00> WHERE discord_user_id = 723616993395343461"
+                # modify = "UPDATE user SET mon_start_time_1 = <00:00:00> WHERE discord_user_id = 723616993395343461"
                 with pool.connect() as db_conn:
                     db_conn.execute(modify, {'duid': user_row.first()[1]})
                 # pool.connect().execute(modify, {'duid': user_row.first()[1]})
