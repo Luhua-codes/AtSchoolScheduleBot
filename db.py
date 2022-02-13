@@ -13,7 +13,7 @@ try:
         create_users_table_query = """
             CREATE TABLE user(
                 id INT AUTO_INCREMENT PRIMARY KEY,
-                discord_user_id INT,
+                discord_user_id BIGINT,
                 monday BOOLEAN DEFAULT false,
                 tuesday BOOLEAN DEFAULT false,
                 wednesday BOOLEAN DEFAULT false,

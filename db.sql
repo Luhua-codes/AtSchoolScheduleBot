@@ -32,7 +32,7 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `discord_user_id` int(11) DEFAULT NULL,
+  `discord_user_id` bigint(20) DEFAULT NULL,
   `monday` tinyint(1) DEFAULT 0,
   `tuesday` tinyint(1) DEFAULT 0,
   `wednesday` tinyint(1) DEFAULT 0,
@@ -114,4 +114,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-02-12 19:00:01
+-- Dump completed on 2022-02-12 19:31:46
