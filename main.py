@@ -191,9 +191,12 @@ async def weekday_time(channel, user_row):
     current_col = 7
     current_col_old_value = 7
     for day in range(2, 7):
-        if user_row.first()[day] > 0:
-            available_message = "What times are you available on " + Weekday(3).name + "?"  # https://docs.python.org/3/library/enum.html
-            available_description = "Enter up to 3 time slots in 24 hour time, separated by spaces (example format: 0900 1200, 1400 1600)"
+        if "SELECT * FROM user WHERE user_row.first()[day] == true":
+            print(user_row.first()[day])  # check which day is currently asking
+            available_message = "What times are you available on " + Weekday(
+                int(day - 1)).name + "?"  # https://docs.python.org/3/library/enum.html
+            available_description = "Enter up to 3 time slots in 24 hour time, separated by spaces (example format: " \
+                                    "0900 1200, 1400 1600) "
             available_embed = discord.Embed(title=available_message, description=available_description)
 
             def check_available_time(msg):  # TODO: validate format
@@ -220,7 +223,9 @@ async def weekday_time(channel, user_row):
         current_col += 1
     if current_col - current_col_old_value != 5:
         current_col = current_col_old_value + 5  # update to go to next set of availability columns
-    discord.Embed(title="Thank you!", description="Your responses have been recorded and can be viewed by server members.")
+    discord.Embed(title="Thank you!",
+                  description="Your responses have been recorded and can be viewed by server members.")
+
 
 # Execute the bot with the specified token
 client.run(TOKEN)
