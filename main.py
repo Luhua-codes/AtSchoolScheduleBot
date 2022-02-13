@@ -213,8 +213,7 @@ async def weekday_time(channel, user_row):
             # modify = "UPDATE user SET user_row.first()[current_col] = t WHERE discord_user_id = %(duid)s"
             modify = "UPDATE user SET user_row.first()[current_col] = CAST(time as TIME) WHERE discord_user_id = %(" \
                      "duid)s "  # https://www.w3schools.com/sql/func_mysql_cast.asp
-            with pool.connect() as db_conn:
-                db_conn.execute(modify, {'duid': user_row.first()[1]})
+            pool.connect().execute(modify, {'duid': user_row.first()[1]})
             current_col += 1
         if current_col - current_col_old_value != 5:
             current_col = current_col_old_value + 5  # update to go to next set of availability columns
