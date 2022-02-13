@@ -18,36 +18,11 @@ class User:
     wednesday = False
     thursday = False
     friday = False
-    ms1 = None
-    ms2 = None
-    ms3 = None
-    me1 = None
-    me2 = None
-    me3 = None
-    ts1 = None
-    ts2 = None
-    ts3 = None
-    te1 = None
-    te2 = None
-    te3 = None
-    ws1 = None
-    ws2 = None
-    ws3 = None
-    we1 = None
-    we2 = None
-    we3 = None
-    rs1 = None
-    rs2 = None
-    rs3 = None
-    re1 = None
-    re2 = None
-    re3 = None
-    fs1 = None
-    fs2 = None
-    fs3 = None
-    fe1 = None
-    fe2 = None
-    fe3 = None
+    start_end_times = {'ms1': None, 'ms2': None, 'ms3': None, 'me1': None, 'me2': None, 'me3': None, 'ts1': None,
+                       'ts2': None, 'ts3': None, 'te1': None, 'te2': None, 'te3': None, 'ws1': None, 'ws2': None,
+                       'ws3': None, 'we1': None, 'we2': None, 'we3': None, 'rs1': None, 'rs2': None, 'rs3': None,
+                       're1': None, 're2': None, 're3': None, 'fs1': None, 'fs2': None, 'fs3': None, 'fe1': None,
+                       'fe2': None, 'fe3': None}
 
 
 TOKEN = open("token.txt", "r").readline()
@@ -83,7 +58,8 @@ async def setup(ctx):  # use context
     dm = await ctx.author.send(embed=embed)
 
     # add reaction emotes for weekdays on embed
-    emojis = ["<:mon:942345965338243072>", "<:tue:942345965388566538>", "<:wed:942345965342457856>", "<:thu:942345965342429244>", "<:fri:942345965266944020>", '✅']  # TODO: update with custom emotes
+    emojis = ["<:mon:942345965338243072>", "<:tue:942345965388566538>", "<:wed:942345965342457856>",
+              "<:thu:942345965342429244>", "<:fri:942345965266944020>", '✅']  # TODO: update with custom emotes
     for e in emojis:
         await dm.add_reaction(e)
 
@@ -141,8 +117,29 @@ async def on_reaction_remove(reaction, user):
 
 @client.event
 async def weekday_time(channel, user):
-    pass
+    if users[user.id].monday:
+        available_message = "What times are you available on Monday?"
+        available_description = "Enter up to 3 time slots in 24 hour time, separated by spaces (example format: 0900 " \
+                                "1200 1400 1600) "
+        available_embed = discord.Embed(title=available_message, description=available_description)
 
+        def check_available_time(msg):  # TODO: validate format
+            return True
+
+        await channel.send(embed=available_embed)
+        user_available_times = await client.wait_for("message", check=check_available_time)
+        print(user_available_times.content)
+
+        user_available_times = user_available_times.content.replace(',', ' ').split()
+        print("user available times", user_available_times)
+        for t in user_available_times:
+            time = f"{t[:2]}:{t[2:]}:00"
+            users[user.id].start_end_times['ms1'] = time  # update start time slot 1
+            print(users[user.id].start_end_times['ms1'])
+            # TODO: figure out how to jump to next day if less than 3 user entries
+
+
+# TODO: role assignment
 
 # Execute the bot with the specified token
 client.run(TOKEN)
