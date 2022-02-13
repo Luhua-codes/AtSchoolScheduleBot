@@ -3,6 +3,23 @@ from discord import emoji
 from discord.ext import commands
 from enum import Enum
 import re
+from google.cloud.sql.connector import connector
+import sqlalchemy
+
+def getconn() -> pymysql.connections.Connection:
+    conn: pymysql.connections.Connection = connector.connect(
+        os.environ["MYSQL_CONNECTION_NAME"],
+        "pymysql",
+        user=os.environ["MYSQL_USER"],
+        password=os.environ["MYSQL_PASS"],
+        db=os.environ["MYSQL_DB"]
+    )
+    return conn
+
+pool = sqlalchemy.create_engine(
+    "mysql+pymysql://",
+    creator=getconn,
+)
 
 class Weekday(Enum):
     MONDAY = 1

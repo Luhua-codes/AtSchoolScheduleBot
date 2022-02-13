@@ -10,3 +10,4 @@ modules.xml
 vcs.xml
 .vs
 stuff.txt
+.env
