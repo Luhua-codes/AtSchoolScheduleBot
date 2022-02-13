@@ -100,9 +100,6 @@ async def setup(ctx):
 
 
 # Event listener for when a user clicks on a weekday emote to make their selection
-selected_weekdays = []
-
-
 @client.event
 async def on_reaction_add(reaction, user):
     if user.bot:

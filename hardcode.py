@@ -11,14 +11,13 @@ class Weekday(Enum):
     FRIDAY = 5
 
 
-class User():
-    def __init__(self, servers, monday, tuesday, wednesday, thursday, friday):
-        self.servers = {}
-        self.monday = False
-        self.tuesday = False
-        self.wednesday = False
-        self.thursday = False
-        self.friday = False
+class User:
+    servers = []
+    monday = False
+    tuesday = False
+    wednesday = False
+    thursday = False
+    friday = False
 
 
 TOKEN = open("token.txt", "r").readline()
@@ -44,7 +43,7 @@ async def on_ready():
 @client.command()
 async def setup(ctx):  # use context
     users.update({ctx.author.id: User()})  # add user to dictionary
-    users[ctx.author.id].servers.add(ctx.guild.id)  # add to user server set
+    users[ctx.author.id].servers.append(ctx.guild.id)  # add to user server set
 
     # prompt user for days on campus
     message = "What days are you on campus?"
@@ -53,9 +52,23 @@ async def setup(ctx):  # use context
     await ctx.channel.send("Message sent! Check your DMs.")
     dm = await ctx.author.send(embed=embed)
 
-    #add reaction emotes for weekdays on embed
-    emojis = ['🇲', '🇹', '🇼', '🇷', '🇫', '✅'] #TODO: update with custom emotes
+    # add reaction emotes for weekdays on embed
+    emojis = ['🇲', '🇹', '🇼', '🇷', '🇫', '✅']  # TODO: update with custom emotes
     for e in emojis:
         await dm.add_reaction(e)
 
     print(users)
+
+
+# event listener for user weekday reactions
+@client.event
+async def on_reaction_add(reaction, user):
+    if user.bot:
+        return
+
+    if str(reaction.emoji) == '🇲':
+        users[user.id].monday = True
+        print(user.id, "selected Monday")
+
+# Execute the bot with the specified token
+client.run(TOKEN)
