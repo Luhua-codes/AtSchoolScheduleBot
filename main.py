@@ -107,8 +107,8 @@ async def on_reaction_add(reaction, user):
         query = sqlalchemy.text("SELECT * from user WHERE discord_user_id=:duid")
         with pool.connect() as db_conn:
             print(user.id)
-            user_row = db_conn.execute(query, user.id)
-            print(user_row)
+            user_row = db_conn.execute(query, duid=user.id)
+            print(user_row, user_row["id"])
         # print(selected_weekdays)
     elif str(reaction.emoji) == '🇹':
         pass
@@ -119,11 +119,7 @@ async def on_reaction_add(reaction, user):
     elif str(reaction.emoji) == '🇫':
         pass
     if str(reaction.emoji) == '✅':
-        await weekday_time(selected_weekdays, reaction.message.channel)
-    # elif emoji == "emoji 3":
-    #     pass
-    # else:
-    #     return
+        await weekday_time(reaction.message.channel)
 
 
 @client.event
@@ -145,7 +141,8 @@ async def on_reaction_remove(reaction, user):
 
 
 # Helper function to ask a user what time they will be at school and not in class
-async def weekday_time(weekdays, channel):
+async def weekday_time(channel):
+    # QUERY WEEKDAYS HERE
     for weekday in weekdays:
         available_message = "What times are you available on " + weekday.lower().capitalize() + "?"
         available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
