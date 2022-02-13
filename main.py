@@ -1,3 +1,4 @@
+import os
 import discord
 from discord import emoji
 from discord.ext import commands
@@ -5,13 +6,11 @@ from enum import Enum
 import re
 from google.cloud.sql.connector import connector
 import sqlalchemy
-import os
+from sqlalchemy.dialects.mysql import pymysql
 from dotenv import load_dotenv
 import pymysql
-
 load_dotenv()
 
-print(os.environ["MYSQL_CONNECTION_NAME"])
 
 def getconn() -> pymysql.connections.Connection:
     conn: pymysql.connections.Connection = connector.connect(
@@ -23,10 +22,12 @@ def getconn() -> pymysql.connections.Connection:
     )
     return conn
 
+
 pool = sqlalchemy.create_engine(
     "mysql+pymysql://",
     creator=getconn,
 )
+
 
 class Weekday(Enum):
     MONDAY = 1
@@ -74,6 +75,12 @@ async def ping(ctx):
 @client.command()
 async def setup(ctx):
     print(ctx.author.id, ctx.author)
+
+    # insert duid into database
+    insert_stmt = sqlalchemy.text("INSERT INTO user (discord_user_id) VALUES(:duid)", )
+    with pool.connect() as db_conn:
+        db_conn.execute(insert_stmt, duid=ctx.author.id)
+
     message = "What days are you usually at school?"
     description = "Select by clicking the emotes of the weekdays. Click the check mark when you are done."
     embed = discord.Embed(title=message, description=description)
@@ -81,9 +88,9 @@ async def setup(ctx):
     dm = await ctx.author.send(embed=embed)
 
     # Add the reaction emotes for the weekdays on the embed
-    emojis = ['👍', '✅']
-    for emoji in emojis:
-        await dm.add_reaction(emoji)
+    emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '✅']
+    for e in emojis:
+        await dm.add_reaction(e)
 
 
 # Even listener for when a user clicks on a weekday emote to make their selection
