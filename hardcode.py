@@ -1,6 +1,7 @@
 from enum import Enum
 import discord
 from discord.ext import commands
+from datetime import datetime
 
 
 class Weekday(Enum):
@@ -10,9 +11,9 @@ class Weekday(Enum):
     THURSDAY = 4
     FRIDAY = 5
 
-
 class User:
     servers = []
+    name = ""
     monday = False
     tuesday = False
     wednesday = False
@@ -43,12 +44,40 @@ async def on_ready():
         guild_count += 1
     print("ASSbot is in", str(guild_count), "guilds")  # display number of servers joined
 
+@client.command()
+async def today(ctx):
+    # In theory would query the db and get users who are there on that day and print this information
+    # Get day of the week
+    date = datetime.now()
+    weekday = date.date().strftime("%A").lower()
+    print(weekday)
+    description = "People who are at school today and times they are available"
+    embed=discord.Embed(title="At School Today", description=description, colour=0x87CEEB)
+    # file = discord.File("emotes/IMG_0775.PNG", filename="IMG_0775.PNG")
+    # embed.set_image(url="attachment://IMG_0775.PNG")
+    for key, value in users.items():
+        print(key)
+        print(value)
+        print(value.monday)
+        # if user.weekday:
+        if value.monday:
+            # create nice output of time
+            times = ""
+            print(value.start_end_times['ms1'])
+            if value.start_end_times['ms1']: times += f"{value.start_end_times['ms1']}-{value.start_end_times['me1']} "
+            if value.start_end_times['ms2']: times += f"{value.start_end_times['ms2']}-{value.start_end_times['me2']} "
+            if value.start_end_times['ms3']: times += f"{value.start_end_times['ms3']}-{value.start_end_times['me3']}"
+            embed.add_field(name=value.name, value=times, inline=False)
+    await ctx.channel.send(embed=embed)
+
+
 
 # DM user for setup dialogue
 @client.command()
 async def setup(ctx):  # use context
     users.update({ctx.author.id: User()})  # add user to dictionary
     users[ctx.author.id].servers.append(ctx.guild.id)  # add to user server set
+    users[ctx.author.id].name = ctx.author.name
 
     # prompt user for days on campus
     message = "What days are you on campus?"
@@ -132,11 +161,16 @@ async def weekday_time(channel, user):
 
         user_available_times = user_available_times.content.replace(',', ' ').split()
         print("user available times", user_available_times)
+        timestamps = []
         for t in user_available_times:
-            time = f"{t[:2]}:{t[2:]}:00"
-            users[user.id].start_end_times['ms1'] = time  # update start time slot 1
-            print(users[user.id].start_end_times['ms1'])
-            # TODO: figure out how to jump to next day if less than 3 user entries
+            timestamps.append(f"{t[:2]}:{t[2:]}:00")
+        
+        if len(timestamps) > 0: users[user.id].start_end_times['ms1'] = timestamps[0] 
+        if len(timestamps) > 1: users[user.id].start_end_times['me1'] = timestamps[1] 
+        if len(timestamps) > 2: users[user.id].start_end_times['ms2'] = timestamps[2] 
+        if len(timestamps) > 3: users[user.id].start_end_times['me2'] = timestamps[3] 
+        if len(timestamps) > 4: users[user.id].start_end_times['ms3'] = timestamps[4] 
+        if len(timestamps) > 5: users[user.id].start_end_times['me3'] = timestamps[5] 
 
 
 # TODO: role assignment

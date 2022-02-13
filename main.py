@@ -94,7 +94,7 @@ async def setup(ctx):
     dm = await ctx.author.send(embed=embed)
 
     # Add the reaction emotes for the weekdays on the embed
-    emojis = ['🇲', "<:tue:942345965388566538>", "<:wed:942345965342457856>", "<:thu:942345965342429244>", "<:fri:942345965266944020>", '✅']  # TODO: update with custom emotes
+    emojis = ["<:mon:942345965338243072>", "<:tue:942345965388566538>", "<:wed:942345965342457856>", "<:thu:942345965342429244>", "<:fri:942345965266944020>", '✅']  # TODO: update with custom emotes
     for e in emojis:
         await dm.add_reaction(e)
 
