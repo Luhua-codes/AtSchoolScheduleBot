@@ -110,13 +110,13 @@ async def on_reaction_add(reaction, user):
     if str(reaction.emoji) == '🇲':
         await update_weekday_column(Weekday.MONDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇹':
-        pass
+        await update_weekday_column(Weekday.TUESDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇼':
-        pass
+        await update_weekday_column(Weekday.WEDNESDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇷':
-        pass
+        await update_weekday_column(Weekday.THURSDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇫':
-        pass
+        await update_weekday_column(Weekday.FRIDAY.name.lower(), user.id)
     if str(reaction.emoji) == '✅':
         await weekday_time(reaction.message.channel)
 
@@ -142,7 +142,7 @@ async def on_reaction_remove(reaction, user):
 async def update_weekday_column(weekday, duid):
     modify = "UPDATE user SET %(weekday)s = true WHERE discord_user_id = %(duid)s"
     with pool.connect() as db_conn:
-        await db_conn.execute(modify, {'weekday': weekday,'duid': duid}) # update day boolean
+        await db_conn.execute(modify, {'weekday': weekday.strip("''"),'duid': duid}) # update day boolean
 
 # Helper function to ask a user what time they will be at school and not in class
 async def weekday_time(channel):
