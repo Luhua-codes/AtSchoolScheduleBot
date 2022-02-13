@@ -88,7 +88,7 @@ async def setup(ctx):
     dm = await ctx.author.send(embed=embed)
 
     # Add the reaction emotes for the weekdays on the embed
-    emojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣', '✅']
+    emojis = ['🇲', '🇹', '🇼', '🇷', '🇫', '✅']
     for e in emojis:
         await dm.add_reaction(e)
 
@@ -101,11 +101,24 @@ selected_weekdays = []
 async def on_reaction_add(reaction, user):
     if user.bot:
         return
-    if str(reaction.emoji) == '👍':
+    if str(reaction.emoji) == '🇲':
         print("added thumbs up")
-        selected_weekdays.append(Weekday.MONDAY.name)
-        print(selected_weekdays)
-    elif str(reaction.emoji) == '✅':
+        # selected_weekdays.append(Weekday.MONDAY.name)
+        query = sqlalchemy.text("SELECT * from user WHERE discord_user_id=:duid")
+        with pool.connect() as db_conn:
+            print(user.id)
+            user_row = db_conn.execute(query, user.id)
+            print(user_row)
+        # print(selected_weekdays)
+    elif str(reaction.emoji) == '🇹':
+        pass
+    elif str(reaction.emoji) == '🇼':
+        pass
+    elif str(reaction.emoji) == '🇷':
+        pass
+    elif str(reaction.emoji) == '🇫':
+        pass
+    if str(reaction.emoji) == '✅':
         await weekday_time(selected_weekdays, reaction.message.channel)
     # elif emoji == "emoji 3":
     #     pass
@@ -117,12 +130,18 @@ async def on_reaction_add(reaction, user):
 async def on_reaction_remove(reaction, user):
     if user.bot:
         return
-    if str(reaction.emoji) == '👍':
-        print("removed thumbs up")
+    if str(reaction.emoji) == '🇲':
+        print("added thumbs up")
         selected_weekdays.remove(Weekday.MONDAY.name)
-        print(selected_weekdays)
-    elif emoji == '✅':
-        await weekday_time(selected_weekdays, reaction.message.channel)
+        # print(selected_weekdays)
+    elif str(reaction.emoji) == '🇹':
+        pass
+    elif str(reaction.emoji) == '🇼':
+        pass
+    elif str(reaction.emoji) == '🇷':
+        pass
+    elif str(reaction.emoji) == '🇫':
+        pass
 
 
 # Helper function to ask a user what time they will be at school and not in class
