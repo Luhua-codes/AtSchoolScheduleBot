@@ -61,6 +61,10 @@ async def today(ctx):
         print(value.monday)
         # if user.weekday:
         if value.monday:
+            # assign school role
+            member = ctx.author
+            role = discord.utils.get(member.guild.roles, name="school")
+            await member.add_roles(role)
             # create nice output of time
             times = ""
             print(value.start_end_times['ms1'])
@@ -171,6 +175,8 @@ async def weekday_time(channel, user):
         if len(timestamps) > 3: users[user.id].start_end_times['me2'] = timestamps[3] 
         if len(timestamps) > 4: users[user.id].start_end_times['ms3'] = timestamps[4] 
         if len(timestamps) > 5: users[user.id].start_end_times['me3'] = timestamps[5] 
+
+        await channel.send("Setup complete!")
 
 
 # TODO: role assignment
