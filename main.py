@@ -221,7 +221,7 @@ async def weekday_time(channel, user_row):
         current_col += 1
     if current_col - current_col_old_value != 5:
         current_col = current_col_old_value + 5  # update to go to next set of availability columns
-
+    discord.Embed(title="Thank you!", description="Your responses have been recorded and can be viewed by server members.")
 
 # Execute the bot with the specified token
 client.run(TOKEN)
