@@ -108,26 +108,35 @@ async def on_reaction_add(reaction, user):
     if user.bot:
         return
     if str(reaction.emoji) == '🇲':
-        print("added thumbs up")
-        # selected_weekdays.append(Weekday.MONDAY.name)
-        query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
         modify = "UPDATE user SET monday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id)
-            db_conn.execute(modify, {'duid': user.id}) # update day boolean
-            user_row = db_conn.execute(query, {'duid': user.id}) # to check row status
-            print(user_row)
-            print(user_row.first()[2])
-
-        # print(selected_weekdays)
+            db_conn.execute(modify, {'duid': user.id})
+        # await update_weekday_column(Weekday.MONDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇹':
-        pass
+        modify = "UPDATE user SET tuesday = true WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id)
+            db_conn.execute(modify, {'duid': user.id})
+        # await update_weekday_column(Weekday.TUESDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇼':
-        pass
+        modify = "UPDATE user SET wednesday = true WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id)
+            db_conn.execute(modify, {'duid': user.id})
+        # await update_weekday_column(Weekday.WEDNESDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇷':
-        pass
+        modify = "UPDATE user SET thursday = true WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id)
+            db_conn.execute(modify, {'duid': user.id})
+        # await update_weekday_column(Weekday.THURSDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇫':
-        pass
+        modify = "UPDATE user SET friday = true WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id)
+            db_conn.execute(modify, {'duid': user.id})
+        # await update_weekday_column(Weekday.FRIDAY.name.lower(), user.id)
     if str(reaction.emoji) == '✅':
         await weekday_time(reaction.message.channel)
 
@@ -149,6 +158,12 @@ async def on_reaction_remove(reaction, user):
     elif str(reaction.emoji) == '🇫':
         pass
 
+# reusable helper function if sql can use variable for column name
+# async def update_weekday_column(weekday, duid):
+#     # modify = sqlalchemy.text("UPDATE user SET :weekday=true WHERE discord_user_id=:duid")
+#     with pool.connect() as db_conn:
+#         await db_conn.execute("UPDATE user SET %s=true WHERE discord_user_id=%s", [weekday, duid])
+#         # await db_conn.execute(modify, weekday="monday", duid=duid) # update day boolean
 
 # Helper function to ask a user what time they will be at school and not in class
 async def weekday_time(channel):
