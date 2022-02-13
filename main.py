@@ -84,7 +84,7 @@ async def setup(ctx):
     insert_to_user_servers = sqlalchemy.text("INSERT INTO user_servers (discord_user_id, discord_server_id) VALUES("
                                              ":duid, :dsid)",)
     with pool.connect() as db_conn:
-        db_conn.execute(insert_to_user_servers, duid=ctx.author, dsid=ctx.guild.id)
+        db_conn.execute(insert_to_user_servers, duid=ctx.author.id, dsid=ctx.guild.id)
     print(ctx.author, ctx.guild.id, ctx.guild.name)
 
     message = "What days are you usually at school?"
