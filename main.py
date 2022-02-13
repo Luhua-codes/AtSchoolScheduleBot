@@ -108,7 +108,7 @@ async def on_reaction_add(reaction, user):
     if user.bot:
         return
     if str(reaction.emoji) == '🇲':
-        update_weekday_column(Weekday.MONDAY.name.lower(), user.id)
+        await update_weekday_column(Weekday.MONDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇹':
         pass
     elif str(reaction.emoji) == '🇼':
