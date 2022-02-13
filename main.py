@@ -165,12 +165,12 @@ async def on_reaction_remove(reaction, user):
             print(user.id, "unselected Wednesday")
             db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == "<:thu:942345965342429244>":
-        modify = "UPDATE user SET thursday = true WHERE discord_user_id = %(duid)s"
+        modify = "UPDATE user SET thursday = false WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "unselected Thursday")
             db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == "<:fri:942345965266944020>":
-        modify = "UPDATE user SET friday = true WHERE discord_user_id = %(duid)s"
+        modify = "UPDATE user SET friday = false WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id, "unselected Friday")
             db_conn.execute(modify, {'duid': user.id})
@@ -225,7 +225,6 @@ async def weekday_time(channel, user_row):
     available_embed = discord.Embed(title="Thank you!",
                                     description="Your responses have been recorded and can be viewed by server members.")
     await channel.send(embed=available_embed)
-
 
 # Execute the bot with the specified token
 client.run(TOKEN)
