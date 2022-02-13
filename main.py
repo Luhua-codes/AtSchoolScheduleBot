@@ -143,6 +143,14 @@ async def weekday_time(weekdays, channel):
         available_times = re.split(' |, ', user_available_times.content)
         print(available_times)
 
+        # convert to timestamp format HH:MM:SS before storing in db 
+        timestamps = []
+        for time in available_times:
+            hours = time[:2]
+            mins = time[2:]
+            timestamps.append(f"{hours}:{mins}:00")
+
+
 
 # Execute the bot with the specified token
 client.run(TOKEN)
