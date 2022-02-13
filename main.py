@@ -115,7 +115,8 @@ async def on_reaction_add(reaction, user):
         with pool.connect() as db_conn:
             print(user.id)
             user_row = db_conn.execute(query, {'duid': user.id})
-            print(user_row, user_row.id)
+            print(user_row)
+            print(user_row.first()[0])
         # print(selected_weekdays)
     elif str(reaction.emoji) == '🇹':
         pass
