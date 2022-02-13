@@ -213,13 +213,15 @@ async def weekday_time(channel, user_row):
             current_col_old_value = current_col
             for t in user_available_times:
                 time = f"{t[:2]}:{t[2:]}:00"
-                # modify = "UPDATE user SET user_row.first()[current_col] = $TIME {time} WHERE discord_user_id = %(duid)s"
+                modify = "UPDATE user SET user_row.first()[current_col] = $TIME {time} WHERE discord_user_id = %(duid)s"
                 # modify = "UPDATE user SET user_row.first()[current_col] = t WHERE discord_user_id = %(duid)s"
                 # modify = "UPDATE user SET user_row.first()[current_col] = CAST(time as TIME) WHERE discord_user_id = %(" \
                 "duid)s"  # https://www.w3schools.com/sql/func_mysql_cast.asp
-            modify = "UPDATE user SET mon_start_time_1 = <00:00:00> WHERE discord_user_id = 723616993395343461"
-            pool.connect().execute(modify, {'duid': user_row.first()[1]})
-            current_col += 1
+                #modify = "UPDATE user SET mon_start_time_1 = <00:00:00> WHERE discord_user_id = 723616993395343461"
+                with pool.connect() as db_conn:
+                    db_conn.execute(modify, {'duid': user_row.first()[1]})
+                # pool.connect().execute(modify, {'duid': user_row.first()[1]})
+                current_col += 1
         if current_col - current_col_old_value != 5:
             current_col = current_col_old_value + 5  # update to go to next set of availability columns
 
