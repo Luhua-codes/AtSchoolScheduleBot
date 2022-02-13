@@ -204,6 +204,7 @@ async def weekday_time(channel, user_row):
         else:
             continue
 
+        user_available_times = str(user_available_times).replace(',', ' ')
         user_available_times = str(user_available_times).split()
         current_col_old_value = current_col
         for t in user_available_times:
