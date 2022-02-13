@@ -9,6 +9,9 @@ import sqlalchemy
 from sqlalchemy.dialects.mysql import pymysql
 from dotenv import load_dotenv
 import pymysql
+
+from db import cursor
+
 load_dotenv()
 
 
@@ -110,11 +113,11 @@ async def on_reaction_add(reaction, user):
     if str(reaction.emoji) == '🇲':
         print("added thumbs up")
         # selected_weekdays.append(Weekday.MONDAY.name)
-        query = sqlalchemy.text("SELECT * from user WHERE discord_user_id=:duid")
+        query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
             print(user.id)
-            user_row = db_conn.execute(query, duid=user.id)
-            print(user_row)# user_row.id)
+            user_row = db_conn.execute(query, {'duid': user.id})
+            print(user_row, user_row.id)
         # print(selected_weekdays)
     elif str(reaction.emoji) == '🇹':
         pass
