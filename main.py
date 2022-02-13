@@ -178,7 +178,7 @@ async def weekday_time(channel, user_row):
     current_col = 7
     for day in range(2, 7):
         if user_row.first()[day] > 0:
-            available_message = "What times are you available on " + user_row.first()[day].lower().capitalize() + "?"
+            available_message = "What times are you available on " + Weekday(1).name + "?"
             available_description = "Enter up to 3 time slots (example format: 0900 1200, 1400 1600)"
             available_embed = discord.Embed(title=available_message, description=available_description)
             await channel.send(embed=available_embed)
@@ -194,10 +194,11 @@ async def weekday_time(channel, user_row):
         user_available_times = user_available_times.split()
         current_col_old_value = current_col
         for t in user_available_times:
-            # time = f"{t[:2]}:{t[2:]}:00"
+            time = f"{t[:2]}:{t[2:]}:00"
             # modify = "UPDATE user SET user_row.first()[current_col] = $TIME {time} WHERE discord_user_id = %(duid)s"
-            modify = "UPDATE user SET user_row.first()[current_col] = t WHERE discord_user_id = %(duid)s"
-            # modify = "UPDATE user SET user_row"
+            # modify = "UPDATE user SET user_row.first()[current_col] = t WHERE discord_user_id = %(duid)s"
+            modify = "UPDATE user SET user_row.first()[current_col] = CAST(time as TIME) WHERE discord_user_id = %(" \
+                     "duid)s "  # https://www.w3schools.com/sql/func_mysql_cast.asp
             with pool.connect() as db_conn:
                 db_conn.execute(modify, {'duid': user_row.first()[1]})
             current_col += 1
