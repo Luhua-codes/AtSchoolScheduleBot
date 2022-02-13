@@ -193,7 +193,7 @@ async def weekday_time(channel, user_row):
     for day in range(2, 7):
         if user_row.first()[day] > 0:
             available_message = "What times are you available on " + Weekday(
-                1).name + "?"  # https://docs.python.org/3/library/enum.html
+                day - 1).name + "?"  # https://docs.python.org/3/library/enum.html
             available_description = "Enter up to 3 time slots in 24 hour time, separated by spaces (example format: 0900 1200, 1400 1600)"
             available_embed = discord.Embed(title=available_message, description=available_description)
 
