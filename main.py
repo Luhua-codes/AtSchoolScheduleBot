@@ -111,7 +111,7 @@ async def on_reaction_add(reaction, user):
         print("added thumbs up")
         # selected_weekdays.append(Weekday.MONDAY.name)
         query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
-        modify = "UPDATE user SET monday = true, [WHERE discord_user_id = %(duid)s]"
+        modify = "UPDATE user SET monday = true [WHERE discord_user_id = %(duid)s]"
         with pool.connect() as db_conn:
             print(user.id)
             db_conn.execute(modify, {'duid': user.id}) # update day boolean
