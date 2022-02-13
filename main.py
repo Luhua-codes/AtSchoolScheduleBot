@@ -1,6 +1,6 @@
 import os
 import discord
-from discord import emoji
+# from discord import emoji
 from discord.ext import commands
 from enum import Enum
 import re
@@ -75,7 +75,7 @@ async def ping(ctx):
 @client.command()
 async def setup(ctx):
 
-    # insert duid into database
+    # insert duid into database // TODO: check if user already in table
     insert_to_user = sqlalchemy.text("INSERT INTO user (discord_user_id) VALUES(:duid)", )
     with pool.connect() as db_conn:
         db_conn.execute(insert_to_user, duid=ctx.author.id)
@@ -114,7 +114,7 @@ async def on_reaction_add(reaction, user):
         with pool.connect() as db_conn:
             print(user.id)
             user_row = db_conn.execute(query, duid=user.id)
-            print(user_row, user_row["id"])
+            print(user_row, user_row.id)
         # print(selected_weekdays)
     elif str(reaction.emoji) == '🇹':
         pass
