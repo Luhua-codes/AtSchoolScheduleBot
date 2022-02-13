@@ -88,18 +88,18 @@ async def setup(ctx):
     print(ctx.author, ctx.guild.id, ctx.guild.name)
 
     message = "What days are you usually at school?"
-    description = "Select by clicking the emotes of the weekdays. Click the check mark when you are done."
+    description = "Select by clicking the emotes corresponding to each weekday. Click the checkmark when you're done."
     embed = discord.Embed(title=message, description=description)
     await ctx.channel.send("Message sent! Check your DMs.")
     dm = await ctx.author.send(embed=embed)
 
     # Add the reaction emotes for the weekdays on the embed
-    emojis = ['🇲', '🇹', '🇼', '🇷', '🇫', '✅']
+    emojis = ['🇲', '🇹', '🇼', '🇷', '🇫', '✅'] #TODO: update with custom emotes
     for e in emojis:
         await dm.add_reaction(e)
 
 
-# Even listener for when a user clicks on a weekday emote to make their selection
+# Event listener for when a user clicks on a weekday emote to make their selection
 selected_weekdays = []
 
 
