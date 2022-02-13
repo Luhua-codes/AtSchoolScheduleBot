@@ -140,10 +140,9 @@ async def on_reaction_remove(reaction, user):
 
 
 async def update_weekday_column(weekday, duid):
-    modify = sqlalchemy.text("UPDATE user SET %(weekday)s = true WHERE discord_user_id = %(duid)s")
+    modify = sqlalchemy.text("UPDATE user SET :weekday = true WHERE discord_user_id = :duid")
     with pool.connect() as db_conn:
-        print(weekday.strip("''"))
-        await db_conn.execute(modify, {'weekday': weekday,'duid': duid}) # update day boolean
+        await db_conn.execute(modify, weekday=weekday, duid =duid) # update day boolean
 
 # Helper function to ask a user what time they will be at school and not in class
 async def weekday_time(channel):
