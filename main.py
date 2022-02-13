@@ -5,6 +5,13 @@ from enum import Enum
 import re
 from google.cloud.sql.connector import connector
 import sqlalchemy
+import os
+from dotenv import load_dotenv
+import pymysql
+
+load_dotenv()
+
+print(os.environ["MYSQL_CONNECTION_NAME"])
 
 def getconn() -> pymysql.connections.Connection:
     conn: pymysql.connections.Connection = connector.connect(
