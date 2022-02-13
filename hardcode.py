@@ -85,12 +85,31 @@ async def on_reaction_add(reaction, user):
     if str(reaction.emoji) == '✅':
         await weekday_time(reaction.message.channel, user.id)
 
-@client.event
-async def on_reaction_remove(reaction, user):
-    pass
 
 @client.event
-async def weekday_time():
+async def on_reaction_remove(reaction, user):
+    if user.bot:
+        return
+
+    if str(reaction.emoji) == '🇲':
+        users[user.id].monday = False
+        print(user.id, "unselected Monday")
+    elif str(reaction.emoji) == '🇹':
+        users[user.id].tuesday = False
+        print(user.id, "unselected Tuesday")
+    elif str(reaction.emoji) == '🇼':
+        users[user.id].wednesday = False
+        print(user.id, "unselected Wednesday")
+    elif str(reaction.emoji) == '🇷':
+        users[user.id].thursday = False
+        print(user.id, "unselected Thursday")
+    elif str(reaction.emoji) == '🇫':
+        users[user.id].friday = False
+        print(user.id, "unselected Friday")
+
+
+@client.event
+async def weekday_time(channel, user):
     pass
 
 
