@@ -75,7 +75,6 @@ async def ping(ctx):
 # DM the user
 @client.command()
 async def setup(ctx):
-
     # insert duid into database // TODO: check if user already in table
     insert_to_user = sqlalchemy.text("INSERT INTO user (discord_user_id) VALUES(:duid)", )
     with pool.connect() as db_conn:
@@ -83,7 +82,7 @@ async def setup(ctx):
     print(ctx.author.id, ctx.author)
 
     insert_to_user_servers = sqlalchemy.text("INSERT INTO user_servers (discord_user_id, discord_server_id) VALUES("
-                                             ":duid, :dsid)",)
+                                             ":duid, :dsid)", )
     with pool.connect() as db_conn:
         db_conn.execute(insert_to_user_servers, duid=ctx.author.id, dsid=ctx.guild.id)
     print(ctx.author, ctx.guild.id, ctx.guild.name)
@@ -112,11 +111,14 @@ async def on_reaction_add(reaction, user):
         print("added thumbs up")
         # selected_weekdays.append(Weekday.MONDAY.name)
         query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
+        modify = "UPDATE user SET monday = true, [WHERE discord_user_id = %(duid)s]"
         with pool.connect() as db_conn:
             print(user.id)
-            user_row = db_conn.execute(query, {'duid': user.id})
+            db_conn.execute(modify, {'duid': user.id}) # update day boolean
+            user_row = db_conn.execute(query, {'duid': user.id}) # to check row status
             print(user_row)
-            print(user_row.first()[0])
+            print(user_row.first()[2])
+
         # print(selected_weekdays)
     elif str(reaction.emoji) == '🇹':
         pass
@@ -173,7 +175,6 @@ async def weekday_time(channel):
             hours = time[:2]
             mins = time[2:]
             timestamps.append(f"{hours}:{mins}:00")
-
 
 
 # Execute the bot with the specified token
