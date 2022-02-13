@@ -108,36 +108,35 @@ async def on_reaction_add(reaction, user):
     if user.bot:
         return
     if str(reaction.emoji) == '🇲':
-        print("added thumbs up")
         # selected_weekdays.append(Weekday.MONDAY.name)
         query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
         modify = "UPDATE user SET monday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id)
+            print(user.id + "selected Monday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.MONDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇹':
         modify = "UPDATE user SET tuesday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id)
+            print(user.id + "selected Tuesday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.TUESDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇼':
         modify = "UPDATE user SET wednesday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id)
+            print(user.id + "selected Wednesday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.WEDNESDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇷':
         modify = "UPDATE user SET thursday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id)
+            print(user.id + "selected Thursday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.THURSDAY.name.lower(), user.id)
     elif str(reaction.emoji) == '🇫':
         modify = "UPDATE user SET friday = true WHERE discord_user_id = %(duid)s"
         with pool.connect() as db_conn:
-            print(user.id)
+            print(user.id + "selected Friday")
             db_conn.execute(modify, {'duid': user.id})
         # await update_weekday_column(Weekday.FRIDAY.name.lower(), user.id)
     if str(reaction.emoji) == '✅':
@@ -153,17 +152,31 @@ async def on_reaction_remove(reaction, user):
     if user.bot:
         return
     if str(reaction.emoji) == '🇲':
-        print("added thumbs up")
-        selected_weekdays.remove(Weekday.MONDAY.name)
-        # print(selected_weekdays)
+        query = "SELECT * FROM user WHERE discord_user_id = %(duid)s"
+        modify = "UPDATE user SET monday = false WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id + "unselected Monday")
+            db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == '🇹':
-        pass
+        modify = "UPDATE user SET tuesday = false WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id + "unselected Tuesday")
+            db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == '🇼':
-        pass
+        modify = "UPDATE user SET wednesday = false WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id + "unselected Wednesday")
+            db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == '🇷':
-        pass
+        modify = "UPDATE user SET thursday = true WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id + "unselected Thursday")
+            db_conn.execute(modify, {'duid': user.id})
     elif str(reaction.emoji) == '🇫':
-        pass
+        modify = "UPDATE user SET friday = true WHERE discord_user_id = %(duid)s"
+        with pool.connect() as db_conn:
+            print(user.id + "unselected Friday")
+            db_conn.execute(modify, {'duid': user.id})
 
 
 # reusable helper function if sql can use variable for column name
